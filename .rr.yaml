@@ -1,0 +1,13 @@
+# Enable RoadRunner's rpc. Used for restarting the workers in our case
+rpc:
+  enable: true
+  listen: tcp://127.0.0.1:6001
+
+# gRPC params
+grpc:
+  listen: "tcp://:9090" # gRPC is enabled on port 9090
+  proto: "simplecache.proto"
+  workers:
+    command: "php worker.grpc.php"
+    pool:
+      numWorkers: 1 # Since we have a cache that's based on an instance variable, we can only have 1 worker for this sample scenario

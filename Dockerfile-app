@@ -1,0 +1,24 @@
+FROM php:7.4-cli
+
+ARG PROTOBUF_VERSION=3.14.0
+
+# Extensions
+RUN echo starting && \
+    apt-get update && \
+    apt-get install unzip && \
+    apt-get install libz-dev
+    # pecl install grpc && \
+    # pecl install protobuf
+
+#install protoc
+RUN mkdir -p /tmp/protoc && \
+    curl -L https://github.com/google/protobuf/releases/download/v${PROTOBUF_VERSION}/protoc-${PROTOBUF_VERSION}-linux-x86_64.zip > /tmp/protoc/protoc.zip && \
+    cd /tmp/protoc && \
+    unzip protoc.zip && \
+    cp /tmp/protoc/bin/protoc /usr/local/bin && \
+    cd /tmp && \
+    rm -r /tmp/protoc && \
+    docker-php-ext-enable grpc && \
+    docker-php-ext-enable protobuf 
+    
+RUN php -r "echo extension_loaded('grpc') ? 'yes' : 'no';"
